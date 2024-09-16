@@ -33,7 +33,7 @@ app.use(cookieParser());
 // Configurar CORS
 app.use(
   cors({
-    origin: 'http://localhost:5173', // URL del frontend en desarrollo
+    origin: 'https://musicstore-1.onrender.com', // URL del frontend en desarrollo
     credentials: true,
   })
 );
