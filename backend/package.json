@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "build": "npm i",
+    "build": "npm install",
     "start": "node index.js",
     "test": "mocha tests/*.mocha.js",
     "lint": "eslint ."
