@@ -66,6 +66,11 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
+// Rutas básicas para manejo de errores y respuesta en la raíz
+app.get('/', (req, res) => {
+  res.send('API del Music Store funcionando');
+});
+
 // Exportar la aplicación para usarla en los tests
 export default app;
 
