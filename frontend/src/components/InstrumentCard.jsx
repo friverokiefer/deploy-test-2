@@ -7,8 +7,9 @@ import { CartContext } from '../context/CartContext';
 function InstrumentCard({ instrument }) {
   const { addToCart } = useContext(CartContext);
 
+  // Acceso correcto a la variable de entorno de Vite
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
-  const imageUrl = `${backendUrl}${instrument.image_url}`;
+  const imageUrl = `${backendUrl}/public${instrument.image_url}`;
 
   const formatPrice = (price) => {
     return new Intl.NumberFormat('es-CL', {
