@@ -33,7 +33,7 @@ app.use(cookieParser());
 // Configurar CORS
 app.use(
   cors({
-    origin: 'https://musicstore-1.onrender.com', // URL del frontend en desarrollo
+    origin: process.env.FRONTEND_URL || 'http://localhost:3000', // Usar variable de entorno para el frontend
     credentials: true,
   })
 );
@@ -56,6 +56,15 @@ pool.connect((err) => {
     console.log('Conexión exitosa a la base de datos');
   }
 });
+
+// Seguridad adicional en producción
+if (process.env.NODE_ENV === 'production') {
+  app.use((req, res, next) => {
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('X-XSS-Protection', '1; mode=block');
+    next();
+  });
+}
 
 // Exportar la aplicación para usarla en los tests
 export default app;
