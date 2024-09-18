@@ -10,21 +10,15 @@ import instrumentosRouter from './routes/instrumentos.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-// Determinar qué archivo de variables de entorno cargar
-const envFile = process.env.NODE_ENV === 'test' ? '.env.test' : '.env';
-dotenv.config({ path: envFile });
+// Cargar variables de entorno de acuerdo al entorno
+dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 5000;
 
 // Obtener __dirname en ES6
-let __dirname;
-if (process.env.NODE_ENV !== 'test') {
-  const __filename = fileURLToPath(import.meta.url);
-  __dirname = path.dirname(__filename);
-} else {
-  __dirname = path.resolve();
-}
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Middlewares
 app.use(express.json());
@@ -66,13 +60,10 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-// Rutas básicas para manejo de errores y respuesta en la raíz
+// Ruta raíz para verificar que la API esté funcionando
 app.get('/', (req, res) => {
   res.send('API del Music Store funcionando');
 });
-
-// Exportar la aplicación para usarla en los tests
-export default app;
 
 // Iniciar el servidor solo si no se está ejecutando en modo de prueba
 if (process.env.NODE_ENV !== 'test') {
@@ -80,3 +71,5 @@ if (process.env.NODE_ENV !== 'test') {
     console.log(`Servidor corriendo en el puerto ${port}`);
   });
 }
+
+export default app;
