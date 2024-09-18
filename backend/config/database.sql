@@ -24,7 +24,8 @@ CREATE TABLE instruments (
     price NUMERIC(10, 2) NOT NULL,
     category TEXT,
     description TEXT,
-    image_url TEXT
+    image_url TEXT,
+    stock INTEGER NOT NULL DEFAULT 0  -- Añadida la columna 'stock'
 );
 
 -- Tabla: purchases
