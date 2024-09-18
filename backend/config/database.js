@@ -1,35 +1,61 @@
 import pkg from 'pg';
-const { Pool } = pkg;
 import dotenv from 'dotenv';
+import fs from 'fs';
+import path from 'path';
 
-// Cargar el archivo de variables de entorno estándar
+const { Pool } = pkg;
+
+// Cargar el archivo de variables de entorno
 dotenv.config({ path: '.env' });
 
-// Verificar las variables de entorno necesarias
-const requiredEnvVariables = ['DB_USER', 'DB_PASSWORD', 'DB_HOST', 'DB_PORT', 'DB_NAME'];
-
-requiredEnvVariables.forEach((key) => {
-  if (!process.env[key]) {
-    console.error(`Error: falta la variable de entorno ${key}`);
-    process.exit(1);
-  }
-});
-
-// Verificar si estamos en entorno de producción o desarrollo
+// Verificar si estamos en producción o en desarrollo
 const isProduction = process.env.NODE_ENV === 'production';
+
+// Determinar la URL de la base de datos a usar
+const connectionString = isProduction
+  ? process.env.DATABASE_URL_EXTERNAL // Usar la URL externa en producción
+  : process.env.DATABASE_URL_INTERNAL; // Usar la URL interna en desarrollo
 
 // Crear la instancia de Pool para la conexión a la base de datos
 const pool = new Pool({
-  user: process.env.DB_USER,
-  host: process.env.DB_HOST,
-  database: process.env.DB_NAME,
-  password: process.env.DB_PASSWORD,
-  port: process.env.DB_PORT,
+  connectionString: connectionString,
   ssl: isProduction
     ? {
         rejectUnauthorized: false, // Permitir conexiones SSL en producción
       }
-    : false, // Deshabilitar SSL en entornos de desarrollo/local
+    : false, // Sin SSL en entornos de desarrollo/local
 });
+
+// Función para ejecutar los scripts SQL desde archivos
+const executeSQLFile = async (filePath) => {
+  try {
+    const sql = fs.readFileSync(filePath, 'utf-8');
+    await pool.query(sql);
+    console.log(`Ejecutado con éxito: ${path.basename(filePath)}`);
+  } catch (err) {
+    console.error(`Error al ejecutar ${path.basename(filePath)}:`, err);
+  }
+};
+
+// Función principal para crear y poblar las tablas
+const setupDatabase = async () => {
+  try {
+    // Crear las tablas
+    await executeSQLFile(path.join(__dirname, 'config', 'database.sql'));
+
+    // Poblar las tablas con datos iniciales
+    await executeSQLFile(path.join(__dirname, 'config', 'insert_instruments.sql'));
+
+    console.log('¡Base de datos configurada con éxito!');
+  } catch (err) {
+    console.error('Error configurando la base de datos:', err);
+  } finally {
+    // Cerrar la conexión a la base de datos
+    pool.end();
+  }
+};
+
+// Llamar a la función para configurar la base de datos
+setupDatabase();
 
 export default pool;
