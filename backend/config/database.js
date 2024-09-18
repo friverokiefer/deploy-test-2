@@ -45,11 +45,11 @@ const executeSQLFile = async (filePath) => {
 // Función principal para crear y poblar las tablas
 const setupDatabase = async () => {
   try {
-    // Crear las tablas
-    await executeSQLFile(path.join(__dirname, 'config', 'database.sql'));
+    // Crear las tablas (ajusta la ruta a 'backend/config')
+    await executeSQLFile(path.join(__dirname, 'database.sql'));
 
-    // Poblar las tablas con datos iniciales
-    await executeSQLFile(path.join(__dirname, 'config', 'insert_instruments.sql'));
+    // Poblar las tablas con datos iniciales (ajusta la ruta a 'backend/config')
+    await executeSQLFile(path.join(__dirname, 'insert_instruments.sql'));
 
     console.log('¡Base de datos configurada con éxito!');
   } catch (err) {
