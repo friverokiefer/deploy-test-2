@@ -2,6 +2,11 @@ import pkg from 'pg';
 import dotenv from 'dotenv';
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
+
+// Definir __dirname manualmente para ESModules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const { Pool } = pkg;
 
@@ -49,13 +54,10 @@ const setupDatabase = async () => {
     console.log('¡Base de datos configurada con éxito!');
   } catch (err) {
     console.error('Error configurando la base de datos:', err);
-  } finally {
-    // Cerrar la conexión a la base de datos
-    pool.end();
-  }
+  } 
 };
 
-// Llamar a la función para configurar la base de datos
+// Llamar a la función para configurar la base de datos si es necesario
 setupDatabase();
 
 export default pool;

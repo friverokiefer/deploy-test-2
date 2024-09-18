@@ -52,16 +52,12 @@ CREATE TABLE purchase_items (
     subtotal NUMERIC(10, 2) NOT NULL
 );
 
--- Tabla: carrito (si la tienes)
--- Si tienes una tabla para el carrito de compras, inclúyela aquí
--- DROP TABLE IF EXISTS carrito CASCADE;
--- CREATE TABLE carrito (
---     id SERIAL PRIMARY KEY,
---     user_id BIGINT REFERENCES users(id),
---     product_id BIGINT REFERENCES instruments(id),
---     quantity INTEGER NOT NULL DEFAULT 1,
---     added_at TIMESTAMP NOT NULL DEFAULT NOW()
--- );
-
--- Índices adicionales o constraints (si es necesario)
--- Puedes agregar aquí cualquier índice o constraint adicional que requiera tu aplicación
+-- Tabla: carrito
+DROP TABLE IF EXISTS carrito CASCADE;
+CREATE TABLE carrito (
+    id SERIAL PRIMARY KEY,
+    user_id BIGINT REFERENCES users(id),
+    product_id BIGINT REFERENCES instruments(id),
+    quantity INTEGER NOT NULL DEFAULT 1,
+    added_at TIMESTAMP NOT NULL DEFAULT NOW()
+);
