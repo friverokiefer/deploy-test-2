@@ -27,7 +27,7 @@ app.use(cookieParser());
 // Configurar CORS
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:3000', // Usar variable de entorno para el frontend
+    origin: process.env.FRONTEND_URL || 'https://deploy-test-2-ugsv.onrender.com', // Usar variable de entorno para el frontend
     credentials: true,
   })
 );
